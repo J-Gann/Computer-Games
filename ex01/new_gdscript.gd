@@ -23,3 +23,7 @@ func _on_Button_button_up():
 	else:
 		active = 1
 
+# Why is it important to know the time between two frames in a game?
+# The reason is, that computation times for frames can be different
+# and time dependant actions in the game like movement have to infer
+# their position from the time past since the last frame
