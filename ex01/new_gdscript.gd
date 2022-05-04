@@ -14,7 +14,7 @@ func _process(delta):
 	if active:
 		time = time + delta
 		var my_label = $Label
-		my_label.text = String(round(time))
+		my_label.set_text(_format_seconds(time))
 
 func _on_Button_button_up():
 	if active:
@@ -22,6 +22,12 @@ func _on_Button_button_up():
 		active = 0
 	else:
 		active = 1
+		
+func _format_seconds(time : float) -> String:
+	var minutes := time / 60
+	var seconds := fmod(time, 60)
+	var milliseconds := fmod(time, 1) * 100
+	return "%02d:%02d:%02d" % [minutes, seconds, milliseconds]
 
 # Why is it important to know the time between two frames in a game?
 # The reason is, that computation times for frames can be different
