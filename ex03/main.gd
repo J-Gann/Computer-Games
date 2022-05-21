@@ -1,3 +1,5 @@
+# name: Timo Ege
+# coauthor list: Jonas Gann
 extends Node2D
 
 
@@ -24,9 +26,9 @@ func _process(delta):
 	var mouse_pos = get_local_mouse_position()
 	var sprt1_pos = spr1.get_position_in_parent()
 	var sprt2_pos = spr2.get_position_in_parent()
-	spr1.position = spr1.position.linear_interpolate(mouse_pos, delta * angular_speed )
-	spr2.position = spr2.position.linear_interpolate(spr1.position, delta * angular_speed )
-	spr3.position = spr3.position.linear_interpolate(spr2.position, delta * angular_speed )
+	spr1.position = spr1.position.linear_interpolate(mouse_pos, delta * 4 )
+	spr2.position = spr2.position.linear_interpolate(spr1.position, delta * 4 )
+	spr3.position = spr3.position.linear_interpolate(spr2.position, delta * 4 )
 
 
 
@@ -41,3 +43,5 @@ func _on_Timer2_timeout():
 
 func _on_Timer3_timeout():
 	spr3.hide()
+
+
