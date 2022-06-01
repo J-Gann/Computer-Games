@@ -1,3 +1,5 @@
+# name: Timo Ege
+# coauthor list: Jonas Gann
 extends Sprite
 
 var direction = Vector2.UP
