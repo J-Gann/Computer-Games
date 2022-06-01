@@ -10,8 +10,8 @@ config_version=4
 
 [application]
 
-config/name="ex05"
-run/main_scene="res://Node2D.tscn"
+config/name="Ex 05"
+run/main_scene="res://Sprite.tscn"
 config/icon="res://icon.png"
 
 [physics]
