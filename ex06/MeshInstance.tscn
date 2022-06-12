@@ -1,4 +1,6 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://MeshInstance.gd" type="Script" id=1]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type spatial;
@@ -41,13 +43,14 @@ subdivide_width = 32
 subdivide_depth = 32
 
 [node name="MeshInstance" type="MeshInstance"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0748055, 0.0404215 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.11401, 0.0404215 )
 mesh = SubResource( 3 )
 material/0 = null
+script = ExtResource( 1 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 0.194409, 0.285717, -0.938387, 0.218002, 0.920131, 0.325323, 0.956389, -0.267816, 0.116595, -5.5255, 1.906, 0.240597 )
-fov = 70.6456
+transform = Transform( 0.146753, 0.0954322, -0.984559, 0.252554, 0.958732, 0.130573, 0.956389, -0.267816, 0.116595, -3.82989, 0.339383, 0.240597 )
+fov = 72.6187
 
 [node name="OmniLight" type="OmniLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.83984, 1.06362, 0.918182 )
