@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+uniform sampler2D noise;
+uniform sampler2D normalmap;
+
+void vertex() {
+	VERTEX.x = sin(UV[1]*3.14)*cos(UV[0]*2.0*3.14);
+	VERTEX.y = sin(UV[1]*3.14)*sin(UV[0]*2.0*3.14);
+	VERTEX.z = 3.0*cos(UV[1]*3.14);
+	
+	float height = texture(noise, UV).x * UV[0];
+	VERTEX.y += height ;
+
+}
+
+void fragment() {
+  NORMALMAP = texture(normalmap, UV).xyz;
+}"
+
+[sub_resource type="OpenSimplexNoise" id=4]
+
+[sub_resource type="NoiseTexture" id=5]
+noise = SubResource( 4 )
+
+[sub_resource type="OpenSimplexNoise" id=6]
+
+[sub_resource type="NoiseTexture" id=7]
+as_normalmap = true
+noise = SubResource( 6 )
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/noise = SubResource( 5 )
+shader_param/normalmap = SubResource( 7 )
+
+[sub_resource type="PlaneMesh" id=3]
+material = SubResource( 2 )
+subdivide_width = 32
+subdivide_depth = 32
+
+[node name="MeshInstance" type="MeshInstance"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0748055, 0.0404215 )
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.194409, 0.285717, -0.938387, 0.218002, 0.920131, 0.325323, 0.956389, -0.267816, 0.116595, -5.5255, 1.906, 0.240597 )
+fov = 70.6456
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.83984, 1.06362, 0.918182 )
+light_color = Color( 1, 0, 0, 1 )
