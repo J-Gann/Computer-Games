@@ -2,11 +2,13 @@ extends Node2D
 var param_V = 200
 var param_T = 3
 var act_T
-var old_T
+var col_T
+var old_T 
 var dis
 var old_dis
 var stop 
 var stop_act = false
+var drawnow = false
 
 var rad	= 10
 var col = Color(255,0,0)
@@ -16,7 +18,7 @@ var wallNode
 var roadNode
 var sprite
 
-var oldPos
+var oldPos 
 var curPos
 
 var timeStart
@@ -27,8 +29,9 @@ func _ready():
 	wallNode = get_node("Wall")
 	roadNode = get_node("Road")
 	sprite = get_node("Path2D/CharacterFollow/Sprite")
-
+	oldPos = sprite.to_global(sprite.get_position())
 	set_process(false)
+
 	
 func _on_Button_pressed():
 	timeStart = OS.get_system_time_msecs()
@@ -52,14 +55,18 @@ func _process(delta):
 	if !stop:
 		var newOffset = pathNode.get_offset() + param_V * delta
 		pathNode.set_offset(newOffset)
-	update()
+	if drawnow:
+		update()
 	if !stop_act:
 		if distance() < 0:
+			act_T = OS.get_system_time_msecs()
 			update_actual()
 
 func _draw():
-	pass
-	#draw_circle(Vector2(oldPos.x, oldPos.y),rad,col)
+	var rad	= 15
+	var col = Color(1.0,0.0,0.0)
+	draw_circle(oldPos,rad,col)
+	drawnow = false
 
 func distance():
 	if oldPos.x <= wallNode.get_point_position(0).x :
@@ -68,27 +75,33 @@ func distance():
 		return oldPos.x-(wallNode.get_point_position(1).x+50.0)
 	
 func update_actual():
-	$ActualValueLabel.text = String(OS.get_system_time_msecs())
+	$ActualValueLabel.text = String(act_T-timeStart)
 	stop_act = true
 
 func fast_correction():
-	return act_T-param_T + (old_dis/param_V)
+	return (col_T-param_T + (old_dis/param_V))-timeStart
 	
 func bisection():
-	var t1 = act_T-param_T
-	var t2 = act_T
+	var t1 = col_T-param_T
+	var t2 = col_T
 	while abs(t1-t2)>(param_T/1000.0):
 		var t = (t1+t2)/2
+		if act_T > t:
+			t1 = t
+		else: 
+			t2 = t
+	return t1-timeStart
 
 
 func _on_Timer_timeout():
 	dis = distance()
-	act_T = OS.get_system_time_msecs()
+	col_T = OS.get_system_time_msecs()
 	if dis < 0:
 		stop = true
 		$FcValueLabel.text= String(fast_correction())
-		
+		$BisectionValueLabel.text = String(bisection())
 		$Timer.stop()
 	else:
-		_draw()
+		drawnow = true
+		
 	old_dis = dis
