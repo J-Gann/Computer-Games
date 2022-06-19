@@ -5,11 +5,12 @@ var act_T
 var col_T
 var old_T 
 var dis
-var old_dis
 var stop 
-var stop_act = false
-var drawnow = false
-
+var stop_act
+var drawnow 
+var curve 
+var lenght
+var dold
 var rad	= 10
 var col = Color(255,0,0)
 
@@ -30,6 +31,8 @@ func _ready():
 	roadNode = get_node("Road")
 	sprite = get_node("Path2D/CharacterFollow/Sprite")
 	oldPos = sprite.to_global(sprite.get_position())
+	curve = $Path2D.get_curve()
+	lenght = curve.get_baked_length () 
 	set_process(false)
 
 	
@@ -41,18 +44,21 @@ func _on_Button_pressed():
 	$Timer.start(param_T)
 	old_T = param_T
 	stop = false
+	stop_act = false
+	drawnow = true
+	dold = distance()
 
 func _process(delta):
 	param_V = $Speed.value
 	param_T = $Time.value
-	if param_T != old_T:
-		$Timer.stop()
-		$Timer.start(param_T)
-		old_T = param_T
-	
+	lenght = lenght / param_V /1000
 	oldPos = sprite.to_global(sprite.get_position())
 	dis = distance()
 	if !stop:
+		if param_T != old_T:
+			$Timer.stop()
+			$Timer.start(param_T)
+			old_T = param_T
 		var newOffset = pathNode.get_offset() + param_V * delta
 		pathNode.set_offset(newOffset)
 	if drawnow:
@@ -79,12 +85,14 @@ func update_actual():
 	stop_act = true
 
 func fast_correction():
-	return (col_T-param_T + (old_dis/param_V))-timeStart
+	var t1 = col_T - 1000*param_T
+	var dt1 =lenght*(col_T-(param_T*1000))
+	return ((t1 + dold/param_V)-timeStart)
 	
 func bisection():
-	var t1 = col_T-param_T
+	var t1 = col_T-(param_T*1000)
 	var t2 = col_T
-	while abs(t1-t2)>(param_T/1000.0):
+	while abs(t1-t2)>(param_T):
 		var t = (t1+t2)/2
 		if act_T > t:
 			t1 = t
@@ -103,5 +111,4 @@ func _on_Timer_timeout():
 		$Timer.stop()
 	else:
 		drawnow = true
-		
-	old_dis = dis
+	dold = dis
